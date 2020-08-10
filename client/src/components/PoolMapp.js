@@ -42,9 +42,10 @@ class PoolMap extends Component {
                         {transactions.map(transaction => {
                             return(
                                 <div>
-                                    <div>Id - {transaction.id}</div>
-                                    <div>Product - {transaction.input.product}</div>
-                                    <div>Quantity - {transaction.input.quantity}</div>
+                                    <p className="walletInfoText">
+                                    Id - {transaction.id} <br />
+                                    Product - {transaction.input.product} <br />
+                                    Quantity - {transaction.input.quantity}</p>
                                 </div>
                             );
                         })}

@@ -26,11 +26,11 @@ mongoose.connect(
     () => console.log("Connected to DB"));
 
 const isDevelopment = process.env.ENV === 'development';
-const REDIS_URL = isDevelopment ? 
+const REDIS_URL = isDevelopment ?
     'redis://127.0.0.1:6379' :
     'redis://h:p2e12ac66333126401be49042ceb7484d6af7d3d3f946bcc1545fa177b55328f3@ec2-54-145-84-202.compute-1.amazonaws.com:26739';
 const DEFAULT_PORT = 3001;
-const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
+const ROOT_NODE_ADDRESS = `https://vast-thicket-16737.herokuapp.com`;
 
 const app = express();
 
@@ -63,12 +63,19 @@ app.get('/createUser',(req,res) => {
 
         wallet = new Wallet();
         transactionMiner = new TransactionMiner({blockchain,transactionPool, wallet, pubsub});
-    
+
         console.log("Created User Successfully !");
-    
+
         isLoggedIn = true;
 
         var details = JSON.stringify(wallet);
+
+        // console.log(wallet);
+        // console.log("--------------------------------------------------------------------------------------------------------");
+        // console.log(JSON.parse(details));
+        // console.log(JSON.parse(JSON.stringify(details)) instanceof Wallet);
+        // console.log(wallet instanceof Wallet);
+        // console.log(Object.assign('Wallet', JSON.parse(details)) instanceof Wallet);
         // fs.writeFileSync(path.join(__dirname, '/client/src/assets/', 'MyWallet.txt'), details);
 
         res.send({ wallet : details });
@@ -108,7 +115,13 @@ app.post('/login',(req,res) => {
 
         // MyWallet = JSON.parse(data);
         // wallet = JSON.parse(JSON.stringify(jsonObj));
+
+        // Edited-
         wallet = JSON.parse(jsonObj);
+
+        // wallet = Object.assign(new Wallet, JSON.parse(jsonObj))
+
+        console.log(wallet instanceof Wallet);
         transactionMiner = new TransactionMiner({blockchain,transactionPool, wallet, pubsub});
 
         wallet.balance = Wallet.calculateBalance({
@@ -127,7 +140,7 @@ app.post('/login',(req,res) => {
             isLoggedIn : isLoggedIn,
             wallet : wallet.publicKey
         });
-        
+
     }
 });
 
@@ -190,6 +203,11 @@ app.post('/api/receive', (req,res) => {
 app.post('/api/transact', (req, res)=>{
     const {amount , recipient } = req.body;
 
+    console.log(amount);
+    console.log(recipient);
+    console.log(blockchain.chain);
+    console.log(wallet instanceof Wallet);
+
     let transaction = transactionPool.existingTransaction({ inputAddress : wallet.publicKey });
 
     try{
@@ -206,7 +224,7 @@ app.post('/api/transact', (req, res)=>{
                 chain : blockchain.chain
             });
         }
-        
+
     }catch(error){
         return res.status(400).json({type :'error', message : error.message});
     }
@@ -221,7 +239,7 @@ app.post('/api/transact', (req, res)=>{
 app.post('/api/trace',(req,res)=>{
     const {product} = req.body;
     console.log("Tracing for product "+product+" ...");
-    
+
     let traceArray = [];
 
     for(let i=1;i<blockchain.chain.length;i++){
@@ -255,7 +273,7 @@ app.post('/api/trace',(req,res)=>{
                     if(found == 0){
                         traceArray.push(transaction.input.to);
                     }
-                    
+
                 }
             }
         }
@@ -403,7 +421,7 @@ const syncPeerList = (async () => {
 let PEER_PORT;
 
 if(process.env.GENERATE_PEER_PORT === 'true')
-{ 
+{
     PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
 }
 

@@ -49103,7 +49103,9 @@ function (_Component) {
         return _react.default.createElement("div", null, _react.default.createElement(_Navigation.default, null), _react.default.createElement("div", {
           className: "Block"
         }, _react.default.createElement("br", null), transactions.map(function (transaction) {
-          return _react.default.createElement("div", null, _react.default.createElement("div", null, "Id - ", transaction.id), _react.default.createElement("div", null, "Product - ", transaction.input.product), _react.default.createElement("div", null, "Quantity - ", transaction.input.quantity));
+          return _react.default.createElement("div", null, _react.default.createElement("p", {
+            className: "walletInfoText"
+          }, "Id - ", transaction.id, " ", _react.default.createElement("br", null), "Product - ", transaction.input.product, " ", _react.default.createElement("br", null), "Quantity - ", transaction.input.quantity));
         })));
       }
     }
@@ -51715,7 +51717,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61459" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62592" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
